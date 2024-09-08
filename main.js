@@ -9,7 +9,7 @@ env.allowLocalModels = false;
 env.backends.onnx.wasm.proxy = true;
 
 // Constants
-const EXAMPLE_URL = 'https://images.pexels.com/photos/5965592/pexels-photo-5965592.jpeg?auto=compress&cs=tinysrgb&w=1024';
+const EXAMPLE_URL = 'https://img.pddpic.com/mms-material-img/2023-02-19/0124f0a6-8c4a-4571-8abe-a23fe84bf514.jpeg';
 
 // Reference the elements that we will need
 const status = document.getElementById('status');
@@ -18,30 +18,17 @@ const imageContainer = document.getElementById('container');
 const example = document.getElementById('example');
 
 // Load model and processor
-status.textContent = 'Loading model...';
+status.textContent = '模型加载中...';
 
-const model = await AutoModel.from_pretrained('briaai/RMBG-1.4', {
-    // Do not require config.json to be present in the repository
-    config: { model_type: 'custom' },
-});
+const [model, processor] = await Promise.all([
+    AutoModel.from_pretrained('Xenova/modnet', {
+      device: 'webgpu',
+      dtype: 'fp32', // or 'fp16'
+    }),
+    AutoProcessor.from_pretrained('Xenova/modnet'),
+  ]);
 
-const processor = await AutoProcessor.from_pretrained('briaai/RMBG-1.4', {
-    // Do not require config.json to be present in the repository
-    config: {
-        do_normalize: true,
-        do_pad: false,
-        do_rescale: true,
-        do_resize: true,
-        image_mean: [0.5, 0.5, 0.5],
-        feature_extractor_type: "ImageFeatureExtractor",
-        image_std: [1, 1, 1],
-        resample: 2,
-        rescale_factor: 0.00392156862745098,
-        size: { width: 1024, height: 1024 },
-    }
-});
-
-status.textContent = 'Ready';
+status.textContent = '模型加载完成~';
 
 example.addEventListener('click', (e) => {
     e.preventDefault();
