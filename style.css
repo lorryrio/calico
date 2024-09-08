@@ -45,6 +45,7 @@ h4 {
   border: 1px solid #cccccc;
   cursor: pointer;
   border-radius: 8px;
+  margin: 1rem 0;
 }
 
 #none {
@@ -73,7 +74,6 @@ h4 {
   border: 2px dashed #D1D5DB;
   border-radius: 0.75rem;
   overflow: hidden;
-  margin-top: 1rem;
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;

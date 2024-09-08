@@ -1,6 +1,7 @@
 import './style.css';
 
 import { AutoModel, AutoProcessor, env, RawImage } from '@xenova/transformers';
+import domtoimage from 'dom-to-image';
 
 // Since we will download the model from the Hugging Face Hub, we can skip the local model check
 env.allowLocalModels = false;
@@ -67,24 +68,22 @@ colors.addEventListener('click', (e) => {
   e.preventDefault();
   const color = e.target.id;
   imageContainer.style.background = colorMap[color];
+  download();
 });
 
-fileUpload.addEventListener('change', function (e) {
+fileUpload.addEventListener('change', (e) => {
   const file = e.target.files[0];
   if (!file) {
     return;
   }
 
   const reader = new FileReader();
-
-  // Set up a callback when the file is loaded
   reader.onload = (e2) => predict(e2.target.result);
-
   reader.readAsDataURL(file);
 });
 
 // Predict foreground of the given image
-async function predict(url) {
+const predict = async (url) => {
   // Read image
   const image = await RawImage.fromURL(url);
 
@@ -133,4 +132,13 @@ async function predict(url) {
   imageContainer.style.removeProperty('background-image');
   imageContainer.style.background = `url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==")`;
   status.textContent = '完成!';
-}
+};
+
+const download = (node = imageContainer) => {
+  domtoimage.toPng(node).then(function (dataUrl) {
+    var link = document.createElement('a');
+    link.download = 'my-image-name.jpeg';
+    link.href = dataUrl;
+    link.click();
+  });
+};
