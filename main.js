@@ -9,13 +9,21 @@ env.allowLocalModels = false;
 env.backends.onnx.wasm.proxy = true;
 
 // Constants
-const EXAMPLE_URL = 'https://p6.toutiaoimg.com/origin/pgc-image/57cea16e7b394721bad0ed4d3045729a?from=pc';
+const EXAMPLE_URL =
+  'https://p6.toutiaoimg.com/origin/pgc-image/57cea16e7b394721bad0ed4d3045729a?from=pc';
 
 // Reference the elements that we will need
 const status = document.getElementById('status');
 const fileUpload = document.getElementById('upload');
 const imageContainer = document.getElementById('container');
 const example = document.getElementById('example');
+const colors = document.getElementById('colors');
+const colorMap = {
+  white: '#ffffff',
+  red: '#960013',
+  blue: '#3855c0',
+  none: `url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==")`,
+};
 
 // Load model and processor
 status.textContent = '模型加载中...';
@@ -53,6 +61,12 @@ status.textContent = '模型加载完成~';
 example.addEventListener('click', (e) => {
   e.preventDefault();
   predict(EXAMPLE_URL);
+});
+
+colors.addEventListener('click', (e) => {
+  e.preventDefault();
+  const color = e.target.id;
+  imageContainer.style.background = colorMap[color];
 });
 
 fileUpload.addEventListener('change', function (e) {

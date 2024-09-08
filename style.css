@@ -32,6 +32,38 @@ h4 {
   margin-top: 0.5rem;
 }
 
+#colors {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 150px;
+}
+
+.color {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #cccccc;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+#none {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==);
+  background-size: 100% 100%;
+}
+
+#white {
+  background-color: #ffffff;
+}
+
+#red {
+  background-color: #960013;
+}
+
+#blue {
+  background-color: #3855c0;
+}
+
 #container {
   position: relative;
   width: 720px;
