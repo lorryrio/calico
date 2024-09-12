@@ -14,35 +14,37 @@ body {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
 
-  h1 {
-    color: #333;
-  }
-}
-
-.upload-container {
-  margin-bottom: 20px;
+  h1 { color: #333; }
 }
 
 .upload-button {
-  display: inline-block;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background: linear-gradient(135deg, #2196F3, #21CBF3);
   color: white;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(33, 150, 243, 0.3);
 
   &:hover {
-    background-color: #45a049;
+    background: linear-gradient(135deg, #1E88E5, #1CB5E0);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 3px rgba(33, 150, 243, 0.4);
   }
 }
 
 .image-wrapper {
   position: relative;
   margin: 20px auto;
-  width: 100%;
   max-width: 600px;
 }
 
@@ -63,10 +65,7 @@ body {
 
 .ai-loading {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   flex-direction: column;
@@ -74,61 +73,43 @@ body {
   align-items: center;
   color: white;
   font-size: 18px;
+
+  &-animation {
+    width: 100px;
+    height: 100px;
+    border: 4px solid #3498db;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
+  }
+
+  &-text {
+    margin-top: 20px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
+  }
 }
 
-.ai-loading-animation {
-  width: 100px;
-  height: 100px;
-  border: 4px solid #3498db;
-  border-top: 4px solid #ffffff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite, pulse 2s ease-in-out infinite;
-}
-
-.ai-loading-text {
-  margin-top: 20px;
-  font-weight: bold;
-  text-shadow: 0 0 10px rgba(52, 152, 219, 0.7);
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
+@keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
   50% { box-shadow: 0 0 0 20px rgba(52, 152, 219, 0); }
 }
 
-.download-button,
-.reset-button {
+.icon-button {
   position: absolute;
   top: 10px;
-  padding: 5px 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
-  &:hover {
-    background-color: #45a049;
-  }
-}
-
-.download-button {
-  right: 10px;
-}
-
-.reset-button {
-  right: 60px; // 调整这个值以确保按钮不重叠
-  background-color: #f44336; // 使用不同的颜色以区分
-
-  &:hover {
-    background-color: #d32f2f;
-  }
+  &.download-button { right: 10px; }
+  &.reset-button { right: 60px; }
 }
 
 .color-buttons {
@@ -139,56 +120,20 @@ body {
 }
 
 .color-button {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  border: 2px solid #8c8b99;
+  border: 2px solid #ccc;
   cursor: pointer;
+  transition: transform 0.2s;
 
-  &:hover {
-    transform: scale(1.1);
-  }
+  &:hover { transform: scale(1.1); }
 
-  &.white {
-    background-color: #ffffff;
-  }
-
-  &.red {
-    background-color: #960013;
-  }
-
-  &.blue {
-    background-color: #3855c0;
-  }
-
+  &.white { background-color: #ffffff; }
+  &.red { background-color: #960013; }
+  &.blue { background-color: #3855c0; }
   &.none {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==");
     background-size: cover;
-  }
-}
-
-.icon-button {
-  position: absolute;
-  top: 10px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.8);
-  font-size: 20px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 1);
-    transform: scale(1.1);
-  }
-
-  &:active {
-    transform: scale(0.95);
   }
 }

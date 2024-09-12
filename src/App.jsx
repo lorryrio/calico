@@ -10,29 +10,28 @@ const COLOR_MAP = {
 };
 
 function App() {
-  const [status, setStatus] = useState('');
-  const [originalImage, setOriginalImage] = useState(null);
-  const [processedImage, setProcessedImage] = useState(null);
+  const [status, setStatus] = useState('模型加载中...');
+  const [image, setImage] = useState({ original: null, processed: null });
   const [backgroundColor, setBackgroundColor] = useState(COLOR_MAP.none);
   const workerRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
 
   useEffect(() => {
-    if (workerRef.current) {
-      return;
-    }
+    if (workerRef.current) return;
 
     workerRef.current = new Worker(new URL('./modelWorker.js', import.meta.url), { type: 'module' });
 
     workerRef.current.onmessage = (event) => {
       if (event.data.type === 'modelLoaded') {
         setStatus('模型加载完成~');
+        setIsModelLoaded(true);
       } else if (event.data.type === 'error') {
         console.error('错误:', event.data.error);
         setStatus('发生错误');
         setIsProcessing(false);
       } else if (event.data.type === 'processedImage') {
-        setProcessedImage(event.data.image);
+        setImage(prev => ({ ...prev, processed: event.data.image }));
         setStatus('完成!');
         setIsProcessing(false);
       }
@@ -62,7 +61,7 @@ function App() {
 
     const reader = new FileReader();
     reader.onload = (e2) => {
-      setOriginalImage(e2.target.result);
+      setImage(prev => ({ ...prev, original: e2.target.result }));
       predict(e2.target.result);
     };
     reader.readAsDataURL(file);
@@ -78,13 +77,8 @@ function App() {
     });
   }, []);
 
-  const handleBackgroundChange = useCallback((color) => {
-    setBackgroundColor(COLOR_MAP[color]);
-  }, []);
-
   const handleReset = useCallback(() => {
-    setOriginalImage(null);
-    setProcessedImage(null);
+    setImage({ original: null, processed: null });
     setBackgroundColor(COLOR_MAP.none);
     setStatus('');
   }, []);
@@ -92,7 +86,7 @@ function App() {
   return (
     <div className="App">
       <p>{status}</p>
-      {!originalImage && (
+      {isModelLoaded && !image.original && (
         <div className="upload-container">
           <label htmlFor="fileInput" className="upload-button">
             上传图片
@@ -105,11 +99,10 @@ function App() {
           </label>
         </div>
       )}
-      {(originalImage || processedImage) && (
+      {image.original && (
         <div className="image-wrapper">
           <div id="imageContainer" style={{ background: backgroundColor }}>
-            {originalImage && !processedImage && <img src={originalImage} alt="Original" />}
-            {processedImage && <img src={processedImage} alt="Processed" />}
+            <img src={image.processed || image.original} alt="Image" />
             {isProcessing && (
               <div className="ai-loading">
                 <div className="ai-loading-animation"></div>
@@ -117,7 +110,7 @@ function App() {
               </div>
             )}
           </div>
-          {processedImage && (
+          {image.processed && (
             <>
               <button className="icon-button download-button" onClick={handleDownload} title="下载图片">
                 ⬇️
@@ -133,7 +126,7 @@ function App() {
         {Object.keys(COLOR_MAP).map((color) => (
           <div
             key={color}
-            onClick={() => handleBackgroundChange(color)}
+            onClick={() => setBackgroundColor(COLOR_MAP[color])}
             className={`color-button ${color}`}
           />
         ))}
