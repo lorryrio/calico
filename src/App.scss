@@ -8,13 +8,13 @@ body {
 }
 
 .App {
+  width: 400px;
   text-align: center;
-  padding: 20px;
+  padding: 16px;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
-  width: 100%;
+  box-sizing: border-box;
 
   h1 {
     color: #333;
@@ -123,7 +123,7 @@ body {
 }
 
 .reset-button {
-  right: 100px; // 调整这个值以确保按钮不重叠
+  right: 60px; // 调整这个值以确保按钮不重叠
   background-color: #f44336; // 使用不同的颜色以区分
 
   &:hover {
@@ -164,5 +164,31 @@ body {
   &.none {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==");
     background-size: cover;
+  }
+}
+
+.icon-button {
+  position: absolute;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }

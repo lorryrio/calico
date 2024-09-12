@@ -119,8 +119,12 @@ function App() {
           </div>
           {processedImage && (
             <>
-              <button className="download-button" onClick={handleDownload}>下载图片</button>
-              <button className="reset-button" onClick={handleReset}>重置</button>
+              <button className="icon-button download-button" onClick={handleDownload} title="下载图片">
+                ⬇️
+              </button>
+              <button className="icon-button reset-button" onClick={handleReset} title="重置">
+                🔄
+              </button>
             </>
           )}
         </div>
