@@ -15,6 +15,7 @@ function App() {
   const [processedImage, setProcessedImage] = useState(null);
   const [backgroundColor, setBackgroundColor] = useState(COLOR_MAP.none);
   const workerRef = useRef(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (workerRef.current) {
@@ -29,9 +30,11 @@ function App() {
       } else if (event.data.type === 'error') {
         console.error('错误:', event.data.error);
         setStatus('发生错误');
+        setIsProcessing(false);
       } else if (event.data.type === 'processedImage') {
         setProcessedImage(event.data.image);
         setStatus('完成!');
+        setIsProcessing(false);
       }
     };
 
@@ -49,6 +52,7 @@ function App() {
       return;
     }
     setStatus('处理中...');
+    setIsProcessing(true);
     workerRef.current.postMessage({ type: 'predict', url });
   }, []);
 
@@ -87,7 +91,6 @@ function App() {
 
   return (
     <div className="App">
-      <h1>图像背景移除</h1>
       <p>{status}</p>
       {!originalImage && (
         <div className="upload-container">
@@ -107,6 +110,12 @@ function App() {
           <div id="imageContainer" style={{ background: backgroundColor }}>
             {originalImage && !processedImage && <img src={originalImage} alt="Original" />}
             {processedImage && <img src={processedImage} alt="Processed" />}
+            {isProcessing && (
+              <div className="ai-loading">
+                <div className="ai-loading-animation"></div>
+                <div className="ai-loading-text">AI 处理中...</div>
+              </div>
+            )}
           </div>
           {processedImage && (
             <>
