@@ -1,0 +1,36 @@
+.App {
+  text-align: center;
+  padding: 20px;
+
+  h1 {
+    color: #333;
+  }
+
+  #imageContainer {
+    margin: 20px auto;
+    max-width: 720px;
+    max-height: 480px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  button {
+    margin: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  input[type="file"] {
+    margin: 10px 0;
+  }
+}
