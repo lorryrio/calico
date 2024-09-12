@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import domtoimage from 'dom-to-image';
 import './App.scss';
 
-const EXAMPLE_URL = 'https://p6.toutiaoimg.com/origin/pgc-image/57cea16e7b394721bad0ed4d3045729a?from=pc';
 const COLOR_MAP = {
   white: '#ffffff',
   red: '#960013',
@@ -11,8 +10,9 @@ const COLOR_MAP = {
 };
 
 function App() {
-  const [status, setStatus] = useState('模型加载中...');
-  const [image, setImage] = useState(null);
+  const [status, setStatus] = useState('');
+  const [originalImage, setOriginalImage] = useState(null);
+  const [processedImage, setProcessedImage] = useState(null);
   const [backgroundColor, setBackgroundColor] = useState(COLOR_MAP.none);
   const workerRef = useRef(null);
 
@@ -30,7 +30,7 @@ function App() {
         console.error('错误:', event.data.error);
         setStatus('发生错误');
       } else if (event.data.type === 'processedImage') {
-        setImage(event.data.image);
+        setProcessedImage(event.data.image);
         setStatus('完成!');
       }
     };
@@ -57,7 +57,10 @@ function App() {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e2) => predict(e2.target.result);
+    reader.onload = (e2) => {
+      setOriginalImage(e2.target.result);
+      predict(e2.target.result);
+    };
     reader.readAsDataURL(file);
   }, [predict]);
 
@@ -75,29 +78,53 @@ function App() {
     setBackgroundColor(COLOR_MAP[color]);
   }, []);
 
+  const handleReset = useCallback(() => {
+    setOriginalImage(null);
+    setProcessedImage(null);
+    setBackgroundColor(COLOR_MAP.none);
+    setStatus('');
+  }, []);
+
   return (
     <div className="App">
       <h1>图像背景移除</h1>
       <p>{status}</p>
-      <div>
-        <input type="file" onChange={handleFileUpload} />
-        <button onClick={() => predict(EXAMPLE_URL)}>使用示例图片</button>
-      </div>
-      <div id="imageContainer" style={{ background: backgroundColor }}>
-        {image && <img src={image} alt="Processed" />}
-      </div>
-      <div>
+      {!originalImage && (
+        <div className="upload-container">
+          <label htmlFor="fileInput" className="upload-button">
+            上传图片
+            <input
+              id="fileInput"
+              type="file"
+              onChange={handleFileUpload}
+              style={{ display: 'none' }}
+            />
+          </label>
+        </div>
+      )}
+      {(originalImage || processedImage) && (
+        <div className="image-wrapper">
+          <div id="imageContainer" style={{ background: backgroundColor }}>
+            {originalImage && !processedImage && <img src={originalImage} alt="Original" />}
+            {processedImage && <img src={processedImage} alt="Processed" />}
+          </div>
+          {processedImage && (
+            <>
+              <button className="download-button" onClick={handleDownload}>下载图片</button>
+              <button className="reset-button" onClick={handleReset}>重置</button>
+            </>
+          )}
+        </div>
+      )}
+      <div className="color-buttons">
         {Object.keys(COLOR_MAP).map((color) => (
-          <button
+          <div
             key={color}
             onClick={() => handleBackgroundChange(color)}
-            style={{ backgroundColor: COLOR_MAP[color] }}
-          >
-            {color}
-          </button>
+            className={`color-button ${color}`}
+          />
         ))}
       </div>
-      <button onClick={handleDownload}>下载图片</button>
     </div>
   );
 }

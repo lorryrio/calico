@@ -1,36 +1,128 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background-color: #f0f0f0;
+}
+
 .App {
   text-align: center;
   padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
 
   h1 {
     color: #333;
   }
+}
 
-  #imageContainer {
-    margin: 20px auto;
-    max-width: 720px;
-    max-height: 480px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.upload-container {
+  margin-bottom: 20px;
+}
 
-    img {
-      max-width: 100%;
-      max-height: 100%;
-    }
+.upload-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+}
+
+.image-wrapper {
+  position: relative;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+#imageContainer {
+  width: 100%;
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+}
+
+.download-button,
+.reset-button {
+  position: absolute;
+  top: 10px;
+  padding: 5px 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #45a049;
+  }
+}
+
+.download-button {
+  right: 10px;
+}
+
+.reset-button {
+  right: 100px; // 调整这个值以确保按钮不重叠
+  background-color: #f44336; // 使用不同的颜色以区分
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+}
+
+.color-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.color-button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #8c8b99;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
   }
 
-  button {
-    margin: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
-    
-    &:hover {
-      opacity: 0.8;
-    }
+  &.white {
+    background-color: #ffffff;
   }
 
-  input[type="file"] {
-    margin: 10px 0;
+  &.red {
+    background-color: #960013;
+  }
+
+  &.blue {
+    background-color: #3855c0;
+  }
+
+  &.none {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAGUExURb+/v////5nD/3QAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAUSURBVBjTYwABQSCglEENMxgYGAAynwRB8BEAgQAAAABJRU5ErkJggg==");
+    background-size: cover;
   }
 }
