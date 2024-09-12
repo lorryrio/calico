@@ -2,6 +2,11 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import domtoimage from 'dom-to-image';
 import './App.scss';
 
+// https://www.iconfont.cn/collections/detail?spm=a313x.collections_index.i1.d9df05512.16573a81OaGeez&cid=19238
+import CloseIcon from './svg/close.svg';
+import DownloadIcon from './svg/download.svg';
+import UploadIcon from './svg/upload.svg';
+
 const COLOR_MAP = {
   white: '#ffffff',
   red: '#960013',
@@ -89,6 +94,7 @@ function App() {
       {isModelLoaded && !image.original && (
         <div className="upload-container">
           <label htmlFor="fileInput" className="upload-button">
+            <img src={UploadIcon} alt="Upload" className="upload-icon" />
             上传图片
             <input
               id="fileInput"
@@ -113,10 +119,10 @@ function App() {
           {image.processed && (
             <>
               <button className="icon-button download-button" onClick={handleDownload} title="下载图片">
-                ⬇️
+                <img src={DownloadIcon} alt="Download" />
               </button>
               <button className="icon-button reset-button" onClick={handleReset} title="重置">
-                🔄
+                <img src={CloseIcon} alt="Reset" />
               </button>
             </>
           )}
