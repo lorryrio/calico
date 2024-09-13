@@ -128,15 +128,17 @@ function App() {
           )}
         </div>
       )}
-      <div className="color-buttons">
-        {Object.keys(COLOR_MAP).map((color) => (
-          <div
-            key={color}
-            onClick={() => setBackgroundColor(COLOR_MAP[color])}
-            className={`color-button ${color}`}
-          />
-        ))}
-      </div>
+      {image.processed && (
+        <div className="color-buttons">
+          {Object.keys(COLOR_MAP).map((color) => (
+            <div
+              key={color}
+              onClick={() => setBackgroundColor(COLOR_MAP[color])}
+              className={`color-button ${color}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
