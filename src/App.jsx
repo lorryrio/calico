@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import domtoimage from 'dom-to-image';
 import './App.scss';
+import ImageProcessorWorker from './worker/ImageProcessorWorker';
 
-// https://www.iconfont.cn/collections/detail?spm=a313x.collections_index.i1.d9df05512.16573a81OaGeez&cid=19238
+import UploadIcon from './svg/upload.svg';
 import CloseIcon from './svg/close.svg';
 import DownloadIcon from './svg/download.svg';
-import UploadIcon from './svg/upload.svg';
 
 const COLOR_MAP = {
   white: '#ffffff',
@@ -18,46 +18,43 @@ function App() {
   const [status, setStatus] = useState('模型加载中...');
   const [image, setImage] = useState({ original: null, processed: null });
   const [backgroundColor, setBackgroundColor] = useState(COLOR_MAP.none);
-  const workerRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isModelLoaded, setIsModelLoaded] = useState(false);
+  const workerRef = useRef(null);
 
   useEffect(() => {
-    if (workerRef.current) return;
-
-    workerRef.current = new Worker(new URL('./modelWorker.js', import.meta.url), { type: 'module' });
-
-    workerRef.current.onmessage = (event) => {
-      if (event.data.type === 'modelLoaded') {
+    workerRef.current = new ImageProcessorWorker(
+      () => {
         setStatus('模型加载完成~');
         setIsModelLoaded(true);
-      } else if (event.data.type === 'error') {
-        console.error('错误:', event.data.error);
+      },
+      (processedImage) => {
+        setImage(prev => ({ ...prev, processed: processedImage }));
+        setIsProcessing(false);
+      },
+      (error) => {
+        console.error('错误:', error);
         setStatus('发生错误');
         setIsProcessing(false);
-      } else if (event.data.type === 'processedImage') {
-        setImage(prev => ({ ...prev, processed: event.data.image }));
-        setStatus('完成!');
-        setIsProcessing(false);
       }
-    };
-
-    workerRef.current.postMessage({ type: 'loadModel' });
+    );
 
     return () => {
-      workerRef.current.terminate();
-      workerRef.current = null;
+      if (workerRef.current) {
+        workerRef.current.terminate();
+      }
     };
   }, []);
 
   const predict = useCallback(async (url) => {
     if (!workerRef.current) {
-      setStatus('Worker 尚未准备就绪');
+      setStatus('AI模型尚未准备就绪');
       return;
     }
-    setStatus('处理中...');
+
+    setStatus('');
     setIsProcessing(true);
-    workerRef.current.postMessage({ type: 'predict', url });
+    workerRef.current.processImage(url);
   }, []);
 
   const handleFileUpload = useCallback((e) => {
